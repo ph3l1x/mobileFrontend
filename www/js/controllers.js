@@ -22,14 +22,14 @@ angular.module('starter.controllers', [])
         };
 
         $scope.performValidRequest = function() {
-            $http.get('http://db.xxx.local').then(
+            $http.get('http://db.copz.net').then(
                 function(result) {
                     $scope.response = result;
                 });
         };
 
         $scope.performUnauthorizedRequest = function() {
-            $http.get('http://db.xxx.local').then(
+            $http.get('http://db.copz.net').then(
                 function(result) {
                     // No result here..
                 }, function(err) {
@@ -38,7 +38,7 @@ angular.module('starter.controllers', [])
         };
 
         $scope.performInvalidRequest = function() {
-            $http.get('http://db.xxx.local').then(
+            $http.get('http://db.copz.net').then(
                 function(result) {
                     // No result here..
                 }, function(err) {

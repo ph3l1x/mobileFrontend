@@ -48,7 +48,7 @@ angular.module('starter')
                 $http({
                     method: "POST",
                     data: { username:name, password:pw },
-                    url: 'http://db.xxx.local'
+                    url: 'http://db.copz.net'
                 }).success(function(data) {
                     if(data.status == 'success') {
                         storeUserCredentials(name + data.token);
