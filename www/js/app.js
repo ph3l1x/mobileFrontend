@@ -4,70 +4,98 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ngMockE2E'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
+    .run(function ($ionicPlatform) {
+        $ionicPlatform.ready(function () {
+            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+            // for form inputs)
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                cordova.plugins.Keyboard.disableScroll(true);
 
-    }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
-  });
-})
-
-.config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider
-
-    .state('app', {
-    url: '/app',
-    abstract: true,
-    templateUrl: 'templates/menu.html',
-    controller: 'AppCtrl'
-  })
-
-  .state('app.search', {
-    url: '/search',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/search.html'
-      }
-    }
-  })
-
-  .state('app.browse', {
-      url: '/browse',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/browse.html'
-        }
-      }
-    })
-    .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
+            }
+            if (window.StatusBar) {
+                // org.apache.cordova.statusbar required
+                StatusBar.styleDefault();
+            }
+        });
     })
 
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
-});
+    .config(function ($stateProvider, $urlRouterProvider, USER_ROLES) {
+        $stateProvider
+            .state('login', {
+                url: '/login',
+                templateUrl: 'templates/login.html',
+                controller: 'LoginCtrl'
+            })
+            .state('main', {
+                url: '/',
+                abstract: true,
+                templateUrl: 'templates/main.html'
+            })
+            .state('main.dash', {
+                url: 'main/dash',
+                views: {
+                    'dash-tab': {
+                        templateUrl: 'templates/dashboard.html',
+                        controller: 'DashCtrl'
+                    }
+                }
+            })
+            .state('main.public', {
+                url: 'main/public',
+                views: {
+                    'public-tab': {
+                        templateUrl: 'templates/public.html'
+                    }
+                }
+            })
+            .state('main.admin', {
+                url: 'main/admin',
+                views: {
+                    'admin-tab': {
+                        templateUrl: 'templates/admin.html'
+                    }
+                },
+                data: {
+                    authorizedRoles: [USER_ROLES.admin]
+                }
+            });
+        $urlRouterProvider.otherwise(function ($injector, $location) {
+            var $state = $injector.get("$state");
+            $state.go("main.dash");
+        });
+    })
+
+    .run(function($httpBackend){
+        $httpBackend.whenGET('http://db.xxx.local')
+            .respond({message: 'This is my valid response!'});
+        $httpBackend.whenGET('http://db.xxx.local')
+            .respond(401, {message: "Not Authenticated"});
+        $httpBackend.whenGET('http://db.xxx.local')
+            .respond(403, {message: "Not Authorized"});
+
+        $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
+    })
+
+    .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+        $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+
+            if ('data' in next && 'authorizedRoles' in next.data) {
+                var authorizedRoles = next.data.authorizedRoles;
+                if (!AuthService.isAuthorized(authorizedRoles)) {
+                    event.preventDefault();
+                    $state.go($state.current, {}, {reload: true});
+                    $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+                }
+            }
+
+            if (!AuthService.isAuthenticated()) {
+                if (next.name !== 'login') {
+                    event.preventDefault();
+                    $state.go('login');
+                }
+            }
+        });
+    });
