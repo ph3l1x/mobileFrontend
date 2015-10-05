@@ -15,6 +15,7 @@ angular.module('starter.controllers', [])
             });
         };
     })
+    fuck
     .controller('DashCtrl', function($scope, $state, $http, $ionicPopup, AuthService) {
         $scope.logout = function() {
             AuthService.logout();
