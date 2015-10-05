@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ngMockE2E'])
+angular.module('starter', ['ionic', 'starter.controllers'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -69,14 +69,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngMockE2E'])
     })
 
     .run(function($httpBackend){
-        $httpBackend.whenGET('http://db.xxx.local')
-            .respond({message: 'This is my valid response!'});
-        $httpBackend.whenGET('http://db.xxx.local')
-            .respond(401, {message: "Not Authenticated"});
-        $httpBackend.whenGET('http://db.xxx.local')
-            .respond(403, {message: "Not Authorized"});
-
-        $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
+        //$httpBackend.whenGET('http://db.xxx.local')
+        //    .respond({message: 'This is my valid response!'});
+        //$httpBackend.whenGET('http://db.xxx.local')
+        //    .respond(401, {message: "Not Authenticated"});
+        //$httpBackend.whenGET('http://db.xxx.local')
+        //    .respond(403, {message: "Not Authorized"});
+        //
+        //$httpBackend.whenGET(/templates\/\w+.*/).passThrough();
     })
 
     .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {

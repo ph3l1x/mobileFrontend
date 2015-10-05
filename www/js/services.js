@@ -45,15 +45,29 @@ angular.module('starter')
 
         var login = function(name, pw) {
             return $q(function(resolve, reject) {
-                if ((name == 'admin' && pw == '1') || (name == 'user' && pw == '1')) {
-                    // Make a request and receive your auth token from your server
-                    storeUserCredentials(name + '.yourServerToken');
-                    resolve('Login success.');
-                } else {
-                    reject('Login Failed.');
-                }
+                $http({
+                    method: "POST",
+                    data: { username:name, password:pw },
+                    url: 'http://db.xxx.local'
+                }).success(function(data) {
+                    if(data.status == 'success') {
+                        storeUserCredentials(name + data.token);
+                        resolve('Login success.');
+                    } else reject('Login Failed.');
+                });
             });
         };
+        //var login = function(name, pw) {
+        //    return $q(function(resolve, reject) {
+        //        if ((name == 'admin' && pw == '1') || (name == 'user' && pw == '1')) {
+        //            // Make a request and receive your auth token from your server
+        //            storeUserCredentials(name + '.yourServerToken');
+        //            resolve('Login success.');
+        //        } else {
+        //            reject('Login Failed.');
+        //        }
+        //    });
+        //};
 
         var logout = function() {
             destroyUserCredentials();
