@@ -1,6 +1,6 @@
 angular.module('starter')
 
-    .service('AuthService', function($q, $http, USER_ROLES) {
+    .service('AuthService', function ($q, $http, USER_ROLES) {
         var LOCAL_TOKEN_KEY = 'yourTokenKey';
         var username = '';
         var isAuthenticated = false;
@@ -43,18 +43,27 @@ angular.module('starter')
             window.localStorage.removeItem(LOCAL_TOKEN_KEY);
         }
 
-        var login = function(name, pw) {
-            return $q(function(resolve, reject) {
+        var login = function (name, pw) {
+            return $q(function (resolve, reject) {
                 $http({
                     method: "POST",
-                    data: { username:name, password:pw },
-                    url: 'http://db.copz.net'
-                }).success(function(data) {
-                    if(data.status == 'success') {
+                    data: {'username': name, 'password': pw},
+                    url: 'http://db.copz.net/index.php',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }).then(function(data) {
+                    console.log(data.token);
                         storeUserCredentials(name + data.token);
-                        resolve('Login success.');
-                    } else reject('Login Failed.');
-                });
+                    resolve('Login Success.');
+                    }, function (data) {
+                        reject('Login Failed.');
+                    });
+                //}).success(function (data) {
+                //    if (data.status == 'success') {
+                //        console.log("OLA");
+                //        storeUserCredentials(name + data.token);
+                //        resolve('Login success.');
+                //    } else reject('Login Failed.');
+                //});
             });
         };
         //var login = function(name, pw) {
@@ -69,11 +78,11 @@ angular.module('starter')
         //    });
         //};
 
-        var logout = function() {
+        var logout = function () {
             destroyUserCredentials();
         };
 
-        var isAuthorized = function(authorizedRoles) {
+        var isAuthorized = function (authorizedRoles) {
             if (!angular.isArray(authorizedRoles)) {
                 authorizedRoles = [authorizedRoles];
             }
@@ -86,22 +95,28 @@ angular.module('starter')
             login: login,
             logout: logout,
             isAuthorized: isAuthorized,
-            isAuthenticated: function() {return isAuthenticated;},
-            username: function() {return username;},
-            role: function() {return role;}
+            isAuthenticated: function () {
+                return isAuthenticated;
+            },
+            username: function () {
+                return username;
+            },
+            role: function () {
+                return role;
+            }
         };
     })
-.factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
-    return {
-        responseError: function (response) {
-            $rootScope.$broadcast({
-                401: AUTH_EVENTS.notAuthenticated,
-                403: AUTH_EVENTS.notAuthorized
-            }[response.status], response);
-            return $q.reject(response);
-        }
-    };
-})
+    .factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
+        return {
+            responseError: function (response) {
+                $rootScope.$broadcast({
+                    401: AUTH_EVENTS.notAuthenticated,
+                    403: AUTH_EVENTS.notAuthorized
+                }[response.status], response);
+                return $q.reject(response);
+            }
+        };
+    })
 
     .config(function ($httpProvider) {
         $httpProvider.interceptors.push('AuthInterceptor');
