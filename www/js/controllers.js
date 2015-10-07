@@ -1,5 +1,18 @@
-angular.module('starter.controllers', [])
-
+angular
+    .module('mobileApp.controllers', [])
+    .controller('AuthController', function($auth, $state) {
+        var vm = this;
+        m.login = function() {
+            var credentials = {
+                email: vm.email,
+                password: vm.password
+            }
+            $auth.login(credentials).then(function(data) {
+                //If login is successful, redirectto the users state
+                $state.go('users', {});
+            });
+        }
+    })
     .controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
         $scope.data = {};
 
@@ -69,3 +82,5 @@ angular.module('starter.controllers', [])
             $scope.username = name;
         };
     });
+
+

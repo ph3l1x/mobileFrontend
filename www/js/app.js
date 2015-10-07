@@ -1,10 +1,5 @@
-// Ionic Starter App
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('mobileApp', ['ionic', 'mobileApp.controllers', 'ui.router', 'satellizer'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -22,8 +17,22 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         });
     })
 
-    .config(function ($stateProvider, $urlRouterProvider, USER_ROLES) {
+    .config(function ($stateProvider, $urlRouterProvider, $authProvider, USER_ROLES) {
+
+        $authProvider.loginUrl = 'db.copz.net/api/authenticate';
+        $urlRouterProvider.otherwise('/auth');
+
         $stateProvider
+            .state('auth', {
+                url: '/auth',
+                templateUrl: 'templates/authView.html',
+                controller: 'AuthController as auth'
+            })
+            .state('users', {
+                url: '/users',
+                templateUrl: 'templates/userView.html',
+                controller: 'UserController as user'
+            })
             .state('login', {
                 url: '/login',
                 templateUrl: 'templates/login.html',
