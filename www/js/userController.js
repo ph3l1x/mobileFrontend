@@ -13,7 +13,7 @@ function UserController($http) {
 
         // This request will hit the index method in the AuthenticateController
         // on the Laravel side and will return the list of users
-        $http.get('api/authenticate').success(function(users) {
+        $http.get('http://db.copz.net/api/authenticate').success(function(users) {
             vm.users = users;
         }).error(function(error) {
             vm.error = error;

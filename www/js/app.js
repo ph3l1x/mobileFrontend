@@ -21,6 +21,7 @@ angular.module('mobileApp', ['ionic', 'mobileApp', 'ui.router', 'satellizer'])
 
         // Satellizer configuration that specifies which API
         // route the JWT should be retrieved from
+        $authProvider.baseUrl = 'http://db.copz.net';
         $authProvider.loginUrl = 'http://db.copz.net/api/authenticate';
 
         // Redirect to the auth state if any other states
