@@ -1,5 +1,5 @@
 
-angular.module('mobileApp', ['ionic', 'mobileApp.controllers', 'ui.router', 'satellizer'])
+angular.module('mobileApp', ['ionic', 'mobileApp', 'ui.router', 'satellizer'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -21,7 +21,7 @@ angular.module('mobileApp', ['ionic', 'mobileApp.controllers', 'ui.router', 'sat
 
         // Satellizer configuration that specifies which API
         // route the JWT should be retrieved from
-        $authProvider.loginUrl = '/api/authenticate';
+        $authProvider.loginUrl = 'http://db.copz.net/api/authenticate';
 
         // Redirect to the auth state if any other states
         // are requested other than users
@@ -30,12 +30,12 @@ angular.module('mobileApp', ['ionic', 'mobileApp.controllers', 'ui.router', 'sat
         $stateProvider
             .state('auth', {
                 url: '/auth',
-                templateUrl: '../views/authView.html',
+                templateUrl: 'templates/authView.html',
                 controller: 'AuthController as auth'
             })
             .state('users', {
                 url: '/users',
-                templateUrl: '../views/userView.html',
+                templateUrl: 'templates/userView.html',
                 controller: 'UserController as user'
             });
     });
