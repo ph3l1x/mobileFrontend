@@ -5,6 +5,7 @@
     "ionic": "driftyco/ionic-bower#1.1.0"
   },
   "dependencies": {
-    "angular-mocks": "~1.4.7"
+    "angular-mocks": "~1.4.7",
+    "angular-ziptastic": "1.2.0"
   }
 }
