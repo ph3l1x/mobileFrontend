@@ -29,6 +29,11 @@ angular.module('mobileApp', ['ionic', 'mobileApp', 'ui.router', 'satellizer'])
         $urlRouterProvider.otherwise('/auth');
 
         $stateProvider
+            .state('register', {
+                url: '/register',
+                templateUrl: 'templates/registerView.html',
+                controller: 'RegisterController as register'
+            })
             .state('auth', {
                 url: '/auth',
                 templateUrl: 'templates/authView.html',
