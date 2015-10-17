@@ -1,4 +1,16 @@
-// ITS READY!
-.test {
-	position:block;
+ion-popover-view {
+  margin-top:-50px !important;
+  top:-100px;
+  ion-content {
+    padding:10px;
+  }
+  .button-block {
+    //width:95%;
+    //position:relative;
+    //left:50%;
+    //transform:translateX(-50%);
+  }
+}
+.popover-backdrop.active {
+  background-color: rgba(0, 0, 0, 0.2);
 }

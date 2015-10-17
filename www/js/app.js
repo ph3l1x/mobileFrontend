@@ -1,5 +1,5 @@
 
-angular.module('mobileApp', ['ionic', 'mobileApp', 'ui.router', 'satellizer'])
+angular.module('mobileApp', ['ionic', 'mobileApp', 'ui.router', 'satellizer', 'ui.utils'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {

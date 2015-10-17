@@ -1,71 +1,105 @@
-angular.module('starter.controllers', [])
+'use strict';
+angular.module('mobileApp')
 
-    .controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
-        $scope.data = {};
 
-        $scope.login = function(data) {
-            AuthService.login(data.username, data.password).then(function(authenticated) {
-                $state.go('main.dash', {}, {reload: true});
-                $scope.setCurrentUsername(data.username);
-            }, function(err) {
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Login failed!',
-                    template: 'Please check your credentials!'
-                });
-            });
-        };
-    })
-    .controller('DashCtrl', function($scope, $state, $http, $ionicPopup, AuthService) {
-        $scope.logout = function() {
-            AuthService.logout();
-            $state.go('login');
-        };
+    .controller('AuthController', AuthController)
+    .controller('RegisterController', RegisterController)
+    .controller('UserController', UserController);
 
-        $scope.performValidRequest = function() {
-            $http.get('http://db.copz.net').then(
-                function(result) {
-                    $scope.response = result;
-                });
-        };
 
-        $scope.performUnauthorizedRequest = function() {
-            $http.get('http://db.copz.net').then(
-                function(result) {
-                    // No result here..
-                }, function(err) {
-                    $scope.response = err;
-                });
-        };
 
-        $scope.performInvalidRequest = function() {
-            $http.get('http://db.copz.net').then(
-                function(result) {
-                    // No result here..
-                }, function(err) {
-                    $scope.response = err;
-                });
-        };
-    })
-    .controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS) {
-        $scope.username = AuthService.username();
+function RegisterController($scope, $http, $ionicPopover) {
 
-        $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
-            var alertPopup = $ionicPopup.alert({
-                title: 'Unauthorized!',
-                template: 'You are not allowed to access this resource.'
-            });
-        });
+    $scope.phone = undefined;
+    $scope.register = {};
+    var register = $scope.register;
 
-        $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
-            AuthService.logout();
-            $state.go('login');
-            var alertPopup = $ionicPopup.alert({
-                title: 'Session Lost!',
-                template: 'Sorry, You have to login again.'
-            });
-        });
-
-        $scope.setCurrentUsername = function(name) {
-            $scope.username = name;
-        };
+    $ionicPopover.fromTemplateUrl('templates/popover.html', {
+        scope: $scope
+    }).then(function(popover) {
+        $scope.popover = popover;
     });
+    $scope.openPopover = function($event) {
+        $scope.popover.show($event);
+    };
+    $scope.closePopover = function() {
+        $scope.popover.hide();
+    };
+    //Cleanup the popover when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.popover.remove();
+    });
+    // Execute action on hide popover
+    $scope.$on('popover.hidden', function() {
+        // Execute action
+    });
+    // Execute action on remove popover
+    $scope.$on('popover.removed', function() {
+        // Execute action
+    });
+
+    $scope.registerFormSubmit = function() {
+     //   console.log($scope.register);
+        $http({
+            method  : 'POST',
+            url     : 'http://db.copz.net/api/register',
+            data    : $scope.register,
+        })
+            .success(function(data) {
+                if(!data.success) {
+                    console.log(data);
+                    $scope.serverMessage = data;
+
+                } else {
+                    $scope.message = data.message;
+                }
+            });
+    };
+}
+
+function UserController($http) {
+
+    var vm = this;
+
+    vm.users;
+    vm.error;
+    vm.something;
+
+    vm.getUsers = function() {
+
+        $http.get('http://db.copz.net/api/authenticate').success(function(users) {
+            vm.users = users;
+        }).error(function(error) {
+            vm.error = error;
+        });
+    };
+    vm.doSomething = function() {
+        $http.get('http://db.copz.net/shit').success(function(something) {
+            vm.something = something;
+        }).error(function(error) {
+            vm.error = error;
+        });
+    }
+}
+
+function AuthController($auth, $state) {
+
+    var vm = this;
+
+    vm.login = function () {
+
+        var credentials = {
+            email: vm.email,
+            password: vm.password
+        };
+
+        $auth.login(credentials).then(function (data) {
+
+            $state.go('users', {});
+        });
+    }
+
+}
+
+
+

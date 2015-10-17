@@ -1,33 +1,36 @@
-<ion-view view-title="Registration" name="Register-view">
+<ion-view view-title="Registration" name="Register-view" id="registerAccount">
     <ion-content class="padding">
         <div class="list list-inset">
 
-            <form name="signupForm">
+            <form name="signupForm" ng-submit="registerFormSubmit()">
                 <label class="item item-input">
-                    <input type="text" placeholder="Firstname" ng-required="" ng-model="register.firstName">
+                    <input type="text" placeholder="Firstname" ng-model="register.firstname">
                 </label>
 
                 <label class="item item-input">
-                    <input type="text" placeholder="Lastname" ng-required="" ng-model="register.lastName">
+                    <input type="text" placeholder="Lastname" ng-model="register.lastname">
                 </label>
-
                 <label class="item item-input">
-                    <input type="text" placeholder="Phone" ng-required="" ng-model="register.phone">
+                     <input ui-mask="999-999-9999" type="text" placeholder="xxx-xxx-xxxx" id="phone" ng-model="register.phone">
+                    <!--<input ui-mask="999-999-9999"-->
+                            <!--placeholder="xxx-xxx-xxxx"-->
+                            <!--ng-model="phone"-->
+                            <!--/>-->
                 </label>
                 <span class="userForm">This must be tied to your current phone number or this app will not work properly</span>
 
                 <h4>Location</h4>
 
                 <label class="item item-input">
-                    <input type="text" placeholder="Street Address" ng-required="" ng-model="register.address">
+                    <input type="text" placeholder="Street Address" ng-model="register.address">
                 </label>
 
                 <label class="item item-input">
-                    <input type="text" placeholder="City" ng-required="" ng-model="register.city">
+                    <input type="text" placeholder="City" ng-model="register.city">
                 </label>
 
                 <label class="item item-input">Select
-                    <select class="ion-input-select" ng-required="" ng-model="register.state">
+                    <select class="ion-input-select" ng-model="register.state">
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
                         <option value="AZ">Arizona</option>
@@ -86,22 +89,37 @@
                 <h4>Login Credentials</h4>
 
                 <label class="item item-input">
-                    <input type="email" placeholder="Email" ng-required="" ng-model="register.email">
+                    <input type="email" placeholder="Email" ng-model="register.email">
                 </label>
 
                 <label class="item item-input">
-                    <input id="pw1" name="pw1" type="password" placeholder="Password" ng-required="" ng-model="pw1">
+                    <input ng-model="register.password" name="password" type="password" placeholder="Password">
                 </label>
 
                 <label class="item item-input">
-                    <input id="pw2" name="pw2" type="password" placeholder="Retype Password" ng-required="" ng-model="pw2" pw-check="pwd1">
+                    <input ng-model="register.password_confirmation" name="password_confirmation" type="password" placeholder="Retype Password">
                 </label>
 
-                <div class="msg-block" ng-hide="pw1 == pw2">
-                        Passwords don't match.
-                </div>
-                <button class="button button-block button-positive" ng-click="auth.login()">Login</button>
+                <!--<div class="msg-block" ng-hide="pw1 == pw2">-->
+                        <!--Passwords don't match.-->
+                <!--</div>-->
+                <button class="button button-block button-positive" ng-click="openPopover($event)">Register</button>
             </form>
+            <script id="templates/popover.html" type="text/ng-template">
+            <ion-popover-view>
+                <ion-header-bar>
+                    <h1 class="title">Popover Title</h1>
+                </ion-header-bar>
+                <ion-content>
+                    <ul>
+                        <li ng-repeat="message in serverMessage">{{message[0]}}</li>
+                    </ul>
+                    <button class="button button-block button-positive" ng-click="closePopover($event)">close</button>
+                </ion-content>
+            </ion-popover-view>
+            </script>
+
+            <pre> {{ register }}</pre>
 
         </div>
     </ion-content>

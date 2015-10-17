@@ -1,4 +1,4 @@
-angular.module('starter')
+angular.module('mobileApp')
 
     .service('AuthService', function ($q, $http, USER_ROLES) {
         var LOCAL_TOKEN_KEY = 'yourTokenKey';
@@ -47,8 +47,9 @@ angular.module('starter')
             return $q(function (resolve, reject) {
                 $http({
                     method: "POST",
-                    data: {'username': name, 'password': pw},
-                    url: 'http://db.copz.net/index.php',
+                    data: {'email': name, 'password': pw},
+                //    url: 'http://db.copz.net/api/authenticate',
+		    url: 'http://db.copz.net/api/authenticate',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                     }).then(function(data) {
                     console.log(data.token);

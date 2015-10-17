@@ -1,17 +1,58 @@
-angular
-    .module('mobileApp')
+'use strict';
+angular.module('mobileApp')
 
 
     .controller('AuthController', AuthController)
     .controller('RegisterController', RegisterController)
     .controller('UserController', UserController);
 
-function RegisterController($auth, $scope, $http, $ionicPopup, $state) {
-    console.log("REGISTER CONTROLLER");
-    $scope.registration = function() {
-        $http.get("http://").then(
-            function(result) {
-                $scope.response = result;
+
+
+function RegisterController($scope, $http, $ionicPopover) {
+
+    $scope.phone = undefined;
+    $scope.register = {};
+    var register = $scope.register;
+
+    $ionicPopover.fromTemplateUrl('templates/popover.html', {
+        scope: $scope
+    }).then(function(popover) {
+        $scope.popover = popover;
+    });
+    $scope.openPopover = function($event) {
+        $scope.popover.show($event);
+    };
+    $scope.closePopover = function() {
+        $scope.popover.hide();
+    };
+    //Cleanup the popover when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.popover.remove();
+    });
+    // Execute action on hide popover
+    $scope.$on('popover.hidden', function() {
+        // Execute action
+    });
+    // Execute action on remove popover
+    $scope.$on('popover.removed', function() {
+        // Execute action
+    });
+
+    $scope.registerFormSubmit = function() {
+     //   console.log($scope.register);
+        $http({
+            method  : 'POST',
+            url     : 'http://db.copz.net/api/register',
+            data    : $scope.register,
+        })
+            .success(function(data) {
+                if(!data.success) {
+                    console.log(data);
+                    $scope.serverMessage = data;
+
+                } else {
+                    $scope.message = data.message;
+                }
             });
     };
 }
@@ -26,8 +67,6 @@ function UserController($http) {
 
     vm.getUsers = function() {
 
-        // This request will hit the index method in the AuthenticateController
-        // on the Laravel side and will return the list of users
         $http.get('http://db.copz.net/api/authenticate').success(function(users) {
             vm.users = users;
         }).error(function(error) {
@@ -54,16 +93,13 @@ function AuthController($auth, $state) {
             password: vm.password
         };
 
-        // Use Satellizer's $auth service to login
         $auth.login(credentials).then(function (data) {
 
-            // If login is successful, redirect to the users state
             $state.go('users', {});
         });
     }
 
 }
-
 
 
 

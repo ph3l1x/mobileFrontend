@@ -1,10 +1,5 @@
-// Ionic Starter App
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('mobileApp', ['ionic', 'mobileApp', 'ui.router', 'satellizer', 'ui.utils'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -22,80 +17,31 @@ angular.module('starter', ['ionic', 'starter.controllers'])
         });
     })
 
-    .config(function ($stateProvider, $urlRouterProvider, USER_ROLES) {
+    .config(function($stateProvider, $urlRouterProvider, $authProvider) {
+
+        // Satellizer configuration that specifies which API
+        // route the JWT should be retrieved from
+        $authProvider.baseUrl = 'http://db.copz.net';
+        $authProvider.loginUrl = 'http://db.copz.net/api/authenticate';
+
+        // Redirect to the auth state if any other states
+        // are requested other than users
+        $urlRouterProvider.otherwise('/auth');
+
         $stateProvider
-            .state('login', {
-                url: '/login',
-                templateUrl: 'templates/login.html',
-                controller: 'LoginCtrl'
+            .state('register', {
+                url: '/register',
+                templateUrl: 'templates/registerView.html',
+                controller: 'RegisterController as register'
             })
-            .state('main', {
-                url: '/',
-                abstract: true,
-                templateUrl: 'templates/main.html'
+            .state('auth', {
+                url: '/auth',
+                templateUrl: 'templates/authView.html',
+                controller: 'AuthController as auth'
             })
-            .state('main.dash', {
-                url: 'main/dash',
-                views: {
-                    'dash-tab': {
-                        templateUrl: 'templates/dashboard.html',
-                        controller: 'DashCtrl'
-                    }
-                }
-            })
-            .state('main.public', {
-                url: 'main/public',
-                views: {
-                    'public-tab': {
-                        templateUrl: 'templates/public.html'
-                    }
-                }
-            })
-            .state('main.admin', {
-                url: 'main/admin',
-                views: {
-                    'admin-tab': {
-                        templateUrl: 'templates/admin.html'
-                    }
-                },
-                data: {
-                    authorizedRoles: [USER_ROLES.admin]
-                }
+            .state('users', {
+                url: '/users',
+                templateUrl: 'templates/userView.html',
+                controller: 'UserController as user'
             });
-        $urlRouterProvider.otherwise(function ($injector, $location) {
-            var $state = $injector.get("$state");
-            $state.go("main.dash");
-        });
-    })
-
-    .run(function($httpBackend){
-        //$httpBackend.whenGET('http://db.xxx.local')
-        //    .respond({message: 'This is my valid response!'});
-        //$httpBackend.whenGET('http://db.xxx.local')
-        //    .respond(401, {message: "Not Authenticated"});
-        //$httpBackend.whenGET('http://db.xxx.local')
-        //    .respond(403, {message: "Not Authorized"});
-        //
-        //$httpBackend.whenGET(/templates\/\w+.*/).passThrough();
-    })
-
-    .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
-        $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
-
-            if ('data' in next && 'authorizedRoles' in next.data) {
-                var authorizedRoles = next.data.authorizedRoles;
-                if (!AuthService.isAuthorized(authorizedRoles)) {
-                    event.preventDefault();
-                    $state.go($state.current, {}, {reload: true});
-                    $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-                }
-            }
-
-            if (!AuthService.isAuthenticated()) {
-                if (next.name !== 'login') {
-                    event.preventDefault();
-                    $state.go('login');
-                }
-            }
-        });
     });
