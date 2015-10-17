@@ -1,0 +1,2 @@
+/home/phelix/www/mobile-app/mobileFrontend/platforms/android/build/intermediates/classes/debug
+/home/phelix/www/mobile-app/mobileFrontend/platforms/android/build/intermediates/pre-dexed/debug/classes-f513bf9c7b2f1f5a422bae80f6f5dd5ff568857e.jar

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/phelix/www/mobile-app/mobileFrontend/platforms/android/build/intermediates/exploded-aar/android/CordovaLib/unspecified/debug/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e3938ade1b6e5a6640c1e3c6377635cfe738fee6">
+        <dex dex="/home/phelix/www/mobile-app/mobileFrontend/platforms/android/build/intermediates/pre-dexed/debug/classes-f513bf9c7b2f1f5a422bae80f6f5dd5ff568857e.jar" />
+    </item>
+
+</items>
