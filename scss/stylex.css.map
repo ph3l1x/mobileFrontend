@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,gBAAiB;EACf,UAAU,EAAC,gBAAgB;EAC3B,GAAG,EAAC,MAAM;EACV,4BAAY;IACV,OAAO,EAAC,IAAI;;AAShB,wBAAyB;EACvB,gBAAgB,EAAE,kBAAkB",
+"sources": ["stylex.scss"],
+"names": [],
+"file": "stylex.css"
+}
